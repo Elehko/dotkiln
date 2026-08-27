@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Dotkiln.Engine</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj" />
+  </ItemGroup>
+</Project>

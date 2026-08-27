@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotkiln.Core", "src\Dotkiln.Core\Dotkiln.Core.csproj", "{244E9A18-C900-4F98-90D8-25E97E1C7E60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elehko.Dotkiln.Core", "src\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj", "{244E9A18-C900-4F98-90D8-25E97E1C7E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotkiln.Engine", "src\Dotkiln.Engine\Dotkiln.Engine.csproj", "{81B95B95-2239-4217-B7CE-7BAE07531E42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elehko.Dotkiln.Engine", "src\Elehko.Dotkiln.Engine\Elehko.Dotkiln.Engine.csproj", "{81B95B95-2239-4217-B7CE-7BAE07531E42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotkiln.Updates", "src\Dotkiln.Updates\Dotkiln.Updates.csproj", "{E915D3F2-D2F4-4D23-9B31-D7238EB8D429}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elehko.Dotkiln.Updates", "src\Elehko.Dotkiln.Updates\Elehko.Dotkiln.Updates.csproj", "{E915D3F2-D2F4-4D23-9B31-D7238EB8D429}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotkiln.Cli", "src\Dotkiln.Cli\Dotkiln.Cli.csproj", "{DE2E30A4-1E4D-4F8F-9169-9D7DC45E1B35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elehko.Dotkiln.Cli", "src\Elehko.Dotkiln.Cli\Elehko.Dotkiln.Cli.csproj", "{DE2E30A4-1E4D-4F8F-9169-9D7DC45E1B35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

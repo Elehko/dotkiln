@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Dotkiln.Updates</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj" />
+    <ProjectReference Include="..\Elehko.Dotkiln.Engine\Elehko.Dotkiln.Engine.csproj" />
+  </ItemGroup>
+</Project>

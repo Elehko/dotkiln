@@ -18,6 +18,15 @@ public sealed class BuildAndTestVerifier
         return new VerificationResult(output.ExitCode == 0, output.Output);
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="arguments"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     private static async Task<(int ExitCode, string Output)> RunAsync(string fileName, string arguments, CancellationToken cancellationToken)
     {
         var startInfo = new ProcessStartInfo(fileName, arguments)

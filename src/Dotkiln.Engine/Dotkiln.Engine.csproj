@@ -1,5 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\Dotkiln.Core\Dotkiln.Core.csproj" />
-  </ItemGroup>
-</Project>
