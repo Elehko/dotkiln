@@ -1,0 +1,7 @@
+﻿services:
+  dotkiln:
+    image: dotkiln
+    build:
+      context: .
+      dockerfile: Dotkiln/Dockerfile
+
