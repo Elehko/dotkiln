@@ -1,0 +1,12 @@
+schemaVersion: "0.1"
+name: blazor-server-standard
+description: Baseline packages for a Blazor Server application
+targetFramework: net8.0
+
+packages:
+  - id: Serilog.AspNetCore
+    version: "8.0.*"
+    group: logging
+  - id: Microsoft.AspNetCore.Components.Web
+    version: "8.0.*"
+    group: blazor

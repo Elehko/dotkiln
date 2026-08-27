@@ -1,0 +1,26 @@
+schemaVersion: "0.1"
+name: aspnet-webapi-standard
+description: Opinionated baseline for a production ASP.NET Core minimal API
+targetFramework: net8.0
+
+packages:
+  - id: Serilog.AspNetCore
+    version: "8.0.*"
+    group: logging
+  - id: Serilog.Sinks.Console
+    version: "6.*"
+    group: logging
+  - id: FluentValidation.AspNetCore
+    version: "11.*"
+    group: validation
+  - id: Microsoft.EntityFrameworkCore.SqlServer
+    version: "8.0.*"
+    group: ef-core
+  - id: Microsoft.EntityFrameworkCore.Tools
+    version: "8.0.*"
+    group: ef-core
+  - id: Swashbuckle.AspNetCore
+    version: "6.*"
+    group: api-docs
+
+snippet: setup/program-cs-additions.txt

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotkiln</ToolCommandName>
+    <PackageId>Dotkiln.Cli</PackageId>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dotkiln.Core\Dotkiln.Core.csproj" />
+    <ProjectReference Include="..\Dotkiln.Engine\Dotkiln.Engine.csproj" />
+    <ProjectReference Include="..\Dotkiln.Updates\Dotkiln.Updates.csproj" />
+  </ItemGroup>
+</Project>

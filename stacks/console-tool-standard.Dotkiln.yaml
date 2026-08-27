@@ -1,0 +1,15 @@
+schemaVersion: "0.1"
+name: console-tool-standard
+description: Baseline packages for a small .NET console tool
+targetFramework: net8.0
+
+packages:
+  - id: Microsoft.Extensions.Hosting
+    version: "8.0.*"
+    group: hosting
+  - id: Serilog.Extensions.Hosting
+    version: "8.0.*"
+    group: logging
+  - id: Serilog.Sinks.Console
+    version: "6.*"
+    group: logging

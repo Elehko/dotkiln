@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Dotkiln.Core\Dotkiln.Core.csproj" />
+    <ProjectReference Include="..\Dotkiln.Engine\Dotkiln.Engine.csproj" />
+  </ItemGroup>
+</Project>
