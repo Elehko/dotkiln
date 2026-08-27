@@ -13,4 +13,9 @@ public sealed record ApplyPlan(
     /// Gets a value indicating whether the stack is already represented by the project.
     /// </summary>
     public bool HasChanges => MissingPackages.Count > 0 || OutOfRangePackages.Count > 0;
+
+    /// <summary>
+    /// Gets every package that needs an add or update operation.
+    /// </summary>
+    public IReadOnlyList<PackageEntry> PackagesToApply => MissingPackages.Concat(OutOfRangePackages).ToArray();
 }

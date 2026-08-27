@@ -8,5 +8,5 @@ public sealed record StackDefinition(
     string Description,
     string TargetFramework,
     IReadOnlyList<PackageEntry> Packages,
-    string? SchemaVersion = null,
+    string SchemaVersion = "0.1",
     string? Snippet = null);

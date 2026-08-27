@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>Elehko.Dotkiln.Registry.Api</RootNamespace>
+    <PackageId>Elehko.Dotkiln.Registry.Api</PackageId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj" />
+  </ItemGroup>
+</Project>

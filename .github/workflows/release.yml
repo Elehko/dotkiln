@@ -1,13 +1,12 @@
-name: CI
+name: Release
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*"
 
 jobs:
-  build:
+  pack:
     runs-on: windows-latest
 
     steps:
@@ -28,5 +27,11 @@ jobs:
       - name: Test
         run: dotnet test Dotkiln.sln --configuration Release --no-build --nologo
 
-      - name: Vulnerability audit
-        run: dotnet list Dotkiln.sln package --vulnerable
+      - name: Pack CLI
+        run: dotnet pack src/Elehko.Dotkiln.Cli/Elehko.Dotkiln.Cli.csproj --configuration Release --no-build --output artifacts
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/*.nupkg

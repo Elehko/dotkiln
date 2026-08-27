@@ -16,3 +16,9 @@ packages:
 Use `group` for packages that must be upgraded together. For example, Entity Framework Core package references should usually share the same `ef-core` group.
 
 Use exact versions when a stack is meant to be fully reproducible. Use patch or minor ranges when the stack should allow compatible updates within a package family.
+
+Supported version expressions:
+
+- Exact versions: `8.0.8`
+- Wildcards: `8.0.*`, `6.*`
+- Basic NuGet-style ranges: `[8.0.0,9.0.0)`

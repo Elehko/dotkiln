@@ -1,4 +1,5 @@
 using Elehko.Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Versions;
 
 namespace Elehko.Dotkiln.Core.Validation;
 
@@ -17,6 +18,12 @@ public sealed class StackValidator
         var errors = new List<string>();
         Require(stack.Name, "Stack name is required.", errors);
         Require(stack.TargetFramework, "Target framework is required.", errors);
+        Require(stack.SchemaVersion, "Schema version is required.", errors);
+
+        if (!string.Equals(stack.SchemaVersion, "0.1", StringComparison.OrdinalIgnoreCase))
+        {
+            errors.Add($"Schema version '{stack.SchemaVersion}' is not supported by this Dotkiln build.");
+        }
 
         if (stack.Packages.Count == 0)
         {
@@ -27,6 +34,15 @@ public sealed class StackValidator
         {
             Require(package.Id, "Package id is required.", errors);
             Require(package.Version, $"Package '{package.Id}' must declare a version.", errors);
+            if (!VersionMatcher.IsSupportedExpression(package.Version))
+            {
+                errors.Add($"Package '{package.Id}' has an unsupported version expression '{package.Version}'.");
+            }
+
+            if (package.Group is { Length: > 0 } && package.Group.Any(character => !char.IsLower(character) && !char.IsDigit(character) && character != '-'))
+            {
+                errors.Add($"Package '{package.Id}' uses invalid group '{package.Group}'. Use lowercase letters, numbers, and hyphens.");
+            }
         }
 
         var duplicatePackages = stack.Packages

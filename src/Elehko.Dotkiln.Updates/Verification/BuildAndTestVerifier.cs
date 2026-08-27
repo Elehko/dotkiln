@@ -1,46 +1,46 @@
-using System.Diagnostics;
+using Elehko.Dotkiln.Engine.Processes;
+using Elehko.Dotkiln.Engine.ProjectFiles;
 
 namespace Elehko.Dotkiln.Updates.Verification;
 
 /// <summary>
 /// Runs dotnet build and, when possible, dotnet test for an isolated project checkout.
 /// </summary>
-public sealed class BuildAndTestVerifier
+public sealed class BuildAndTestVerifier(IProcessRunner? processRunner = null, ProjectDiscovery? projectDiscovery = null)
 {
     /// <summary>
-    /// Verifies a project or solution path by running the .NET SDK build command.
+    /// Verifies a project, solution, or directory by running build and discovered tests.
     /// </summary>
     public async Task<VerificationResult> VerifyAsync(string path, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
-        var output = await RunAsync("dotnet", $"build \"{path}\" --nologo", cancellationToken);
-        return new VerificationResult(output.ExitCode == 0, output.Output);
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="arguments"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    private static async Task<(int ExitCode, string Output)> RunAsync(string fileName, string arguments, CancellationToken cancellationToken)
-    {
-        var startInfo = new ProcessStartInfo(fileName, arguments)
+        var runner = processRunner ?? new ProcessRunner();
+        var discovery = projectDiscovery ?? new ProjectDiscovery();
+        var build = await runner.RunAsync("dotnet", $"build \"{path}\" --nologo", Directory.Exists(path) ? path : Path.GetDirectoryName(path), cancellationToken);
+        if (build.ExitCode != 0)
         {
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false
-        };
+            return new VerificationResult(false, build.Output, TestsWereRun: false);
+        }
 
-        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException($"Unable to start {fileName}.");
-        var standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        var standardError = process.StandardError.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken);
+        var root = Directory.Exists(path) ? path : Path.GetDirectoryName(path) ?? Environment.CurrentDirectory;
+        var testProjects = discovery.FindProjects(root).Where(discovery.IsTestProject).ToArray();
+        if (testProjects.Length == 0)
+        {
+            return new VerificationResult(true, build.Output, TestsWereRun: false);
+        }
 
-        return (process.ExitCode, string.Concat(await standardOutput, await standardError));
+        var outputs = new List<string> { build.Output };
+        foreach (var testProject in testProjects)
+        {
+            var test = await runner.RunAsync("dotnet", $"test \"{testProject}\" --no-build --nologo", Path.GetDirectoryName(testProject), cancellationToken);
+            outputs.Add(test.Output);
+            if (test.ExitCode != 0)
+            {
+                return new VerificationResult(false, string.Join(Environment.NewLine, outputs), TestsWereRun: true);
+            }
+        }
+
+        return new VerificationResult(true, string.Join(Environment.NewLine, outputs), TestsWereRun: true);
     }
 }

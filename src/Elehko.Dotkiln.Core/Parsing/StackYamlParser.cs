@@ -74,7 +74,7 @@ public sealed class StackYamlParser
             scalars.GetValueOrDefault("description") ?? string.Empty,
             Required(scalars, "targetFramework"),
             packages,
-            scalars.GetValueOrDefault("schemaVersion"),
+            scalars.GetValueOrDefault("schemaVersion") ?? "0.1",
             scalars.GetValueOrDefault("snippet"));
     }
 

@@ -1,4 +1,7 @@
 using Elehko.Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Versions;
+using Elehko.Dotkiln.Engine.NuGetResolution;
+using Elehko.Dotkiln.Engine.Processes;
 using Elehko.Dotkiln.Engine.ProjectFiles;
 
 namespace Elehko.Dotkiln.Engine.Apply;
@@ -6,7 +9,10 @@ namespace Elehko.Dotkiln.Engine.Apply;
 /// <summary>
 /// Computes and applies stack changes to .NET project files.
 /// </summary>
-public sealed class ApplyEngine(CsprojInspector inspector)
+public sealed class ApplyEngine(
+    CsprojInspector inspector,
+    INuGetVersionResolver? versionResolver = null,
+    IProcessRunner? processRunner = null)
 {
     /// <summary>
     /// Creates an apply plan by comparing a stack with the project's direct package references.
@@ -29,7 +35,7 @@ public sealed class ApplyEngine(CsprojInspector inspector)
                 continue;
             }
 
-            if (!VersionPatternMatches(package.Version, installedPackage.Version))
+            if (!VersionMatcher.Matches(package.Version, installedPackage.Version))
             {
                 outOfRange.Add(package);
             }
@@ -38,19 +44,46 @@ public sealed class ApplyEngine(CsprojInspector inspector)
         return new ApplyPlan(missing, outOfRange);
     }
 
-    private static bool VersionPatternMatches(string requested, string installed)
+    /// <summary>
+    /// Applies package changes with the .NET CLI.
+    /// </summary>
+    public async Task<ApplyResult> ApplyAsync(string projectPath, StackDefinition stack, bool dryRun = false, CancellationToken cancellationToken = default)
     {
-        if (string.Equals(requested, installed, StringComparison.OrdinalIgnoreCase))
+        var resolvedProject = inspector.ResolveProjectPath(projectPath);
+        var plan = Plan(resolvedProject, stack);
+        var messages = new List<string>();
+
+        if (!plan.HasChanges)
         {
-            return true;
+            messages.Add("Project already matches stack.");
+            return new ApplyResult(true, plan, messages);
         }
 
-        if (requested.EndsWith(".*", StringComparison.Ordinal))
+        foreach (var package in plan.PackagesToApply)
         {
-            var prefix = requested[..^1];
-            return installed.StartsWith(prefix, StringComparison.OrdinalIgnoreCase);
+            if (dryRun)
+            {
+                var previewCommand = $"add \"{resolvedProject}\" package {package.Id} --version {package.Version}";
+                messages.Add($"Would run: dotnet {previewCommand}");
+                continue;
+            }
+
+            var version = await ResolveVersionAsync(package, cancellationToken);
+            var command = $"add \"{resolvedProject}\" package {package.Id} --version {version}";
+            var result = await (processRunner ?? new ProcessRunner()).RunAsync("dotnet", command, Path.GetDirectoryName(resolvedProject), cancellationToken);
+            messages.Add(result.Output.Trim());
+            if (result.ExitCode != 0)
+            {
+                return new ApplyResult(false, plan, messages);
+            }
         }
 
-        return false;
+        return new ApplyResult(true, plan, messages);
+    }
+
+    private async Task<string> ResolveVersionAsync(PackageEntry package, CancellationToken cancellationToken)
+    {
+        var resolver = versionResolver ?? new NuGetVersionResolver();
+        return await resolver.ResolveLatestMatchingAsync(package, cancellationToken) ?? package.Version;
     }
 }
