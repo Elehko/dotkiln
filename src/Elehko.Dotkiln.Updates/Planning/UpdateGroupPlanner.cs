@@ -1,6 +1,6 @@
-using Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Models;
 
-namespace Dotkiln.Updates.Planning;
+namespace Elehko.Dotkiln.Updates.Planning;
 
 /// <summary>
 /// Groups stack packages into safe update units.

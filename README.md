@@ -12,16 +12,16 @@ This repository is at the initial implementation stage. The current CLI supports
 
 ```powershell
 dotnet build
-dotnet run --project src/Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.Dotkiln.yaml
-dotnet run --project src/Dotkiln.Cli -- update stacks/aspnet-webapi-standard.Dotkiln.yaml --group ef-core
+dotnet run --project src/Elehko.Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.dotkiln.yaml
+dotnet run --project src/Elehko.Dotkiln.Cli -- update stacks/aspnet-webapi-standard.dotkiln.yaml --group ef-core
 ```
 
 ## Project Layout
 
-- `src/Dotkiln.Core` - stack models, parsing, and validation
-- `src/Dotkiln.Engine` - project inspection and stack apply planning
-- `src/Dotkiln.Updates` - grouped update planning and verification primitives
-- `src/Dotkiln.Cli` - command-line entry point
+- `src/Elehko.Dotkiln.Core` - stack models, parsing, and validation
+- `src/Elehko.Dotkiln.Engine` - project inspection and stack apply planning
+- `src/Elehko.Dotkiln.Updates` - grouped update planning and verification primitives
+- `src/Elehko.Dotkiln.Cli` - command-line entry point
 - `stacks` - built-in stack definitions
 - `docs` - contributor and architecture documentation
 

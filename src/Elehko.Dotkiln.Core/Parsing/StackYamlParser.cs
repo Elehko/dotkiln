@@ -1,6 +1,6 @@
-using Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Models;
 
-namespace Dotkiln.Core.Parsing;
+namespace Elehko.Dotkiln.Core.Parsing;
 
 /// <summary>
 /// Parses Dotkiln's intentionally small stack YAML subset.

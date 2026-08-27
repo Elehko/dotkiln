@@ -1,6 +1,6 @@
-using Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Models;
 
-namespace Dotkiln.Engine.Apply;
+namespace Elehko.Dotkiln.Engine.Apply;
 
 /// <summary>
 /// Describes the package operations needed to apply a stack to a project.

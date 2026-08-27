@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace Dotkiln.Engine.ProjectFiles;
+namespace Elehko.Dotkiln.Engine.ProjectFiles;
 
 /// <summary>
 /// Reads direct package references from SDK-style project files.

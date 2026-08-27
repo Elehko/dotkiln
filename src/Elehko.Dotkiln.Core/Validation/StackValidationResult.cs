@@ -1,4 +1,4 @@
-namespace Dotkiln.Core.Validation;
+namespace Elehko.Dotkiln.Core.Validation;
 
 /// <summary>
 /// Contains validation messages for a stack definition.

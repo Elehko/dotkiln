@@ -1,4 +1,4 @@
-namespace Dotkiln.Engine.ProjectFiles;
+namespace Elehko.Dotkiln.Engine.ProjectFiles;
 
 /// <summary>
 /// Represents a direct package reference found in a project file.

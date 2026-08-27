@@ -1,4 +1,4 @@
-namespace Dotkiln.Core.Models;
+namespace Elehko.Dotkiln.Core.Models;
 
 /// <summary>
 /// Represents a versioned package stack definition loaded from a Dotkiln YAML file.

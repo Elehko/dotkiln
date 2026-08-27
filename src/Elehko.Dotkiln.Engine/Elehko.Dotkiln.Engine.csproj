@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>Dotkiln.Engine</RootNamespace>
+    <RootNamespace>Elehko.Dotkiln.Engine</RootNamespace>
+    <PackageId>Elehko.Dotkiln.Engine</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj" />

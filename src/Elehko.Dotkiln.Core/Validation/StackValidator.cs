@@ -1,6 +1,6 @@
-using Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Models;
 
-namespace Dotkiln.Core.Validation;
+namespace Elehko.Dotkiln.Core.Validation;
 
 /// <summary>
 /// Validates stack definitions before they are applied or published.

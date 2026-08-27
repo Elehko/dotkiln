@@ -1,7 +1,7 @@
-using Dotkiln.Core.Models;
-using Dotkiln.Engine.ProjectFiles;
+using Elehko.Dotkiln.Core.Models;
+using Elehko.Dotkiln.Engine.ProjectFiles;
 
-namespace Dotkiln.Engine.Apply;
+namespace Elehko.Dotkiln.Engine.Apply;
 
 /// <summary>
 /// Computes and applies stack changes to .NET project files.

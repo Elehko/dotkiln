@@ -1,9 +1,9 @@
-using Dotkiln.Core.Parsing;
-using Dotkiln.Core.Models;
-using Dotkiln.Core.Validation;
-using Dotkiln.Engine.Apply;
-using Dotkiln.Engine.ProjectFiles;
-using Dotkiln.Updates.Planning;
+using Elehko.Dotkiln.Core.Models;
+using Elehko.Dotkiln.Core.Parsing;
+using Elehko.Dotkiln.Core.Validation;
+using Elehko.Dotkiln.Engine.Apply;
+using Elehko.Dotkiln.Engine.ProjectFiles;
+using Elehko.Dotkiln.Updates.Planning;
 
 var exitCode = await RunAsync(args);
 return exitCode;

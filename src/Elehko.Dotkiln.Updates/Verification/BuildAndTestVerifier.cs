@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Dotkiln.Updates.Verification;
+namespace Elehko.Dotkiln.Updates.Verification;
 
 /// <summary>
 /// Runs dotnet build and, when possible, dotnet test for an isolated project checkout.

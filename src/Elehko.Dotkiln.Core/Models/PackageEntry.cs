@@ -1,4 +1,4 @@
-namespace Dotkiln.Core.Models;
+namespace Elehko.Dotkiln.Core.Models;
 
 /// <summary>
 /// Describes one direct NuGet package managed by a Dotkiln stack.

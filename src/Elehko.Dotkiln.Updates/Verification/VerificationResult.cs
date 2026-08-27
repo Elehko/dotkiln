@@ -1,4 +1,4 @@
-namespace Dotkiln.Updates.Verification;
+namespace Elehko.Dotkiln.Updates.Verification;
 
 /// <summary>
 /// Represents the result of build and test verification.
