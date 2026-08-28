@@ -39,12 +39,15 @@ public sealed class NuGetVersionResolver : INuGetVersionResolver
             return null;
         }
 
+        var allowsPrerelease = VersionMatcher.AllowsPrerelease(package.Version);
+
         return versionsElement
             .EnumerateArray()
             .Select(element => element.GetString())
             .Where(version => version is not null && VersionMatcher.Matches(package.Version, version))
             .Select(version => SemanticVersion.TryParse(version!, out var parsed) ? parsed : null)
             .Where(version => version is not null)
+            .Where(version => allowsPrerelease || !version!.IsPrerelease)
             .OrderDescending()
             .FirstOrDefault()
             ?.Original;

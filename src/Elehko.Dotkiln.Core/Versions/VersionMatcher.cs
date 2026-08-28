@@ -17,6 +17,11 @@ public static partial class VersionMatcher
             return true;
         }
 
+        if (!AllowsPrerelease(requested) && IsPrerelease(installed))
+        {
+            return false;
+        }
+
         if (requested.EndsWith(".*", StringComparison.Ordinal))
         {
             var prefix = requested[..^1];
@@ -42,6 +47,22 @@ public static partial class VersionMatcher
         }
 
         return SemanticVersion.TryParse(expression, out _) || RangePattern().IsMatch(expression);
+    }
+
+    /// <summary>
+    /// Returns whether a version expression explicitly allows prerelease versions.
+    /// </summary>
+    public static bool AllowsPrerelease(string expression)
+    {
+        return expression.Contains('-', StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Returns whether a concrete package version has a prerelease label.
+    /// </summary>
+    public static bool IsPrerelease(string version)
+    {
+        return SemanticVersion.TryParse(version, out var parsed) && parsed.IsPrerelease;
     }
 
     private static bool MatchesRange(string requested, string installed)

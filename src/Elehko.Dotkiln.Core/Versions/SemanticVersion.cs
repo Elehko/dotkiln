@@ -3,7 +3,7 @@ namespace Elehko.Dotkiln.Core.Versions;
 /// <summary>
 /// Represents a comparable semantic version core.
 /// </summary>
-public sealed record SemanticVersion(int Major, int Minor, int Patch, string Original) : IComparable<SemanticVersion>
+public sealed record SemanticVersion(int Major, int Minor, int Patch, string Original, string? Prerelease = null) : IComparable<SemanticVersion>
 {
     /// <summary>
     /// Parses common NuGet semantic versions, ignoring prerelease labels for ordering.
@@ -16,7 +16,10 @@ public sealed record SemanticVersion(int Major, int Minor, int Patch, string Ori
             return false;
         }
 
-        var core = value.Split('-', '+')[0];
+        var versionWithoutBuild = value.Split('+')[0];
+        var split = versionWithoutBuild.Split('-', 2);
+        var core = split[0];
+        var prerelease = split.Length == 2 ? split[1] : null;
         var parts = core.Split('.');
         if (parts.Length == 0 || parts.Length > 4)
         {
@@ -30,9 +33,14 @@ public sealed record SemanticVersion(int Major, int Minor, int Patch, string Ori
 
         var minor = parts.Length > 1 && int.TryParse(parts[1], out var parsedMinor) ? parsedMinor : 0;
         var patch = parts.Length > 2 && int.TryParse(parts[2], out var parsedPatch) ? parsedPatch : 0;
-        version = new SemanticVersion(major, minor, patch, value);
+        version = new SemanticVersion(major, minor, patch, value, prerelease);
         return true;
     }
+
+    /// <summary>
+    /// Gets whether this version contains a SemVer prerelease label.
+    /// </summary>
+    public bool IsPrerelease => !string.IsNullOrWhiteSpace(Prerelease);
 
     /// <inheritdoc />
     public int CompareTo(SemanticVersion? other)
@@ -49,6 +57,22 @@ public sealed record SemanticVersion(int Major, int Minor, int Patch, string Ori
         }
 
         var minor = Minor.CompareTo(other.Minor);
-        return minor != 0 ? minor : Patch.CompareTo(other.Patch);
+        if (minor != 0)
+        {
+            return minor;
+        }
+
+        var patch = Patch.CompareTo(other.Patch);
+        if (patch != 0)
+        {
+            return patch;
+        }
+
+        if (IsPrerelease == other.IsPrerelease)
+        {
+            return string.Compare(Prerelease, other.Prerelease, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return IsPrerelease ? -1 : 1;
     }
 }
