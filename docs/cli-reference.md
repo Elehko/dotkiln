@@ -12,6 +12,8 @@ After tool packaging, the command name is intended to be:
 dotkiln <command>
 ```
 
+For machine-readable output details, see [JSON output](json-output.md). For preview-mode examples, see [Dry-run output](dry-run-output.md).
+
 ## validate
 
 Parses and validates a stack file.
