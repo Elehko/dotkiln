@@ -21,6 +21,47 @@ dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/my-service.dotkiln.
 dotnet run --project src/Elehko.Dotkiln.Cli -- apply stacks/my-service.dotkiln.yaml src/MyService/MyService.csproj --dry-run
 ```
 
+Expected `status` output during migration often looks like this:
+
+```text
+Stack: my-service
+  logging      up to date
+  validation   drift detected
+    missing      FluentValidation.AspNetCore (missing) -> 11.*
+
+Extra packages not in stack (informational):
+  AutoMapper 13.0.1
+
+Drift detected. 1 extra packages found (not flagged).
+```
+
+Interpretation:
+
+- `FluentValidation.AspNetCore` is part of the baseline but missing, so it is drift.
+- `AutoMapper` is installed but not part of the baseline, so it is informational.
+- If `AutoMapper` is expected for this project, add it to `.dotkilnignore` or leave it visible for audit.
+
+## Suggested First Stack
+
+For an existing ASP.NET Core API, start small:
+
+```yaml
+schemaVersion: "0.1"
+name: my-service-baseline
+description: Baseline packages for MyService
+targetFramework: net8.0
+
+packages:
+  - id: Serilog.AspNetCore
+    version: "8.0.*"
+    group: logging
+  - id: Serilog.Sinks.Console
+    version: "6.*"
+    group: logging
+```
+
+Run `status` against one project first. Add more packages only after the initial baseline is easy to understand.
+
 ## Central Package Management
 
 Dotkiln currently inspects direct `PackageReference` entries in `.csproj` files. Full `Directory.Packages.props` support is not implemented yet.
@@ -34,6 +75,15 @@ Direct editing or drift detection against `Directory.Packages.props` is not curr
 ## Multi-project Solutions
 
 Dotkiln commands currently operate on one project path at a time. For multi-project repositories, run `status` or `apply --dry-run` per project.
+
+Example:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/my-service.dotkiln.yaml src/Api/Api.csproj
+dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/my-service.dotkiln.yaml src/Worker/Worker.csproj
+```
+
+This makes each project's drift and extra-package report explicit.
 
 ## Private NuGet Feeds
 

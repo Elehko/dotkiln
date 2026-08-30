@@ -10,6 +10,20 @@ version: "8.0.30"
 
 Exact versions require the project package reference to match exactly.
 
+Example:
+
+```text
+Requested: 8.0.30
+Installed: 8.0.30
+Result: up to date
+```
+
+```text
+Requested: 8.0.30
+Installed: 8.0.29
+Result: out-of-range
+```
+
 ## Wildcards
 
 ```yaml
@@ -21,6 +35,20 @@ version: "8.*"
 ```
 
 Wildcards match versions with the same prefix. When applying a package, Dotkiln resolves the latest stable NuGet version that matches the wildcard.
+
+Examples:
+
+```text
+Requested: 8.0.*
+Installed: 8.0.30
+Result: up to date
+```
+
+```text
+Requested: 8.0.*
+Installed: 8.1.0
+Result: out-of-range
+```
 
 ## Ranges
 
@@ -34,6 +62,20 @@ Basic NuGet-style ranges are supported:
 - `(` means exclusive lower bound
 - `]` means inclusive upper bound
 - `)` means exclusive upper bound
+
+Examples:
+
+```text
+Requested: [8.0.0,9.0.0)
+Installed: 8.0.30
+Result: up to date
+```
+
+```text
+Requested: [8.0.0,9.0.0)
+Installed: 9.0.0
+Result: out-of-range
+```
 
 ## Prerelease Versions
 
@@ -50,6 +92,8 @@ To allow a prerelease, the stack must explicitly include a prerelease label:
 ```yaml
 version: "8.0.3-preview.1"
 ```
+
+This prevents a wildcard such as `8.0.*` from silently selecting nightly or development builds.
 
 ## Floating Versions
 
