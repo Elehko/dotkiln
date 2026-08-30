@@ -51,6 +51,32 @@ Dotkiln currently validates:
 
 Unknown top-level fields are ignored by the current parser. Do not rely on unknown fields for behavior.
 
+## Validation Example
+
+Command:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.dotkiln.yaml
+```
+
+Output:
+
+```text
+Stack 'aspnet-webapi-standard' is valid (6 packages).
+```
+
+Invalid stack example:
+
+```yaml
+name: broken-stack
+targetFramework: net8.0
+
+packages:
+  - id: Serilog.AspNetCore
+```
+
+This fails because the package is missing `version`.
+
 ## Full Example
 
 ```yaml
@@ -72,3 +98,5 @@ packages:
 
 snippet: setup/program-cs-additions.txt
 ```
+
+When this stack is applied, Dotkiln installs or updates the direct package references. If `setup/program-cs-additions.txt` exists next to the stack file, Dotkiln prints it as suggested starter code instead of editing application source.

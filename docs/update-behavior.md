@@ -21,6 +21,10 @@ The real project is not modified by `update`. Package changes are applied inside
 
 The current implementation reports verification results. It does not yet promote successful isolated changes back into the real branch or open a pull request.
 
+Even though package changes happen in isolation, `update` still requires a clean git working tree by default. This keeps Dotkiln's rollback story consistent across mutating workflows and avoids running update checks on top of uncommitted local edits.
+
+Use `--force` to override this guard.
+
 ## Dry Run
 
 Use `--dry-run` to show grouped update intent without creating an isolated workspace:
@@ -36,6 +40,19 @@ Planning updates (1 groups)...
   ef-core: Would update 2 packages in isolation.
 ```
 
+Meaning: Dotkiln found the `ef-core` group and would test that group as one unit. Because this is a dry run, no temp workspace is created and no package restore is performed.
+
+## Successful Verification
+
+Example output:
+
+```text
+Planning updates (1 groups)...
+  ef-core: Build and tests passed in isolation.
+```
+
+Meaning: Dotkiln applied the group inside a disposable workspace, then `dotnet build` and discovered tests passed there. The real project was not modified.
+
 ## Failure Behavior
 
 If package application, build, or tests fail inside the isolated workspace:
@@ -43,6 +60,16 @@ If package application, build, or tests fail inside the isolated workspace:
 - Dotkiln exits with code `1`
 - the real branch is not modified
 - a log file is written, such as `Dotkiln-update-ef-core.log`
+
+Example output:
+
+```text
+Planning updates (1 groups)...
+  ef-core: Verification failed. No changes made to your branch.
+    See C:\repo\Dotkiln-update-ef-core.log
+```
+
+Meaning: the isolated update failed build or tests. Open the log to inspect compiler errors or test failures. The project you ran the command against has not been changed by `update`.
 
 ## Rollback
 

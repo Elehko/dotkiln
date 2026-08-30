@@ -4,6 +4,7 @@ using Elehko.Dotkiln.Core.Models;
 using Elehko.Dotkiln.Core.Parsing;
 using Elehko.Dotkiln.Core.Validation;
 using Elehko.Dotkiln.Engine.Apply;
+using Elehko.Dotkiln.Engine.Git;
 using Elehko.Dotkiln.Engine.NuGetResolution;
 using Elehko.Dotkiln.Engine.Processes;
 using Elehko.Dotkiln.Engine.ProjectFiles;
@@ -93,11 +94,12 @@ internal sealed class CliApp
     {
         if (args.Length < 2)
         {
-            return UsageError("Usage: dotkiln apply <stack> [project.csproj] [--dry-run] [--json]");
+            return UsageError("Usage: dotkiln apply <stack> [project.csproj] [--dry-run] [--force] [--json]");
         }
 
         var stack = await LoadAndValidateAsync(args[1]);
         var projectPath = Positional(args, 2) ?? Environment.CurrentDirectory;
+        await EnsureCleanIfMutatingAsync(projectPath, Has(args, "--dry-run"), Has(args, "--force"));
         var result = await CreateApplyEngine().ApplyAsync(projectPath, stack, Has(args, "--dry-run"));
         PrintSnippet(stack, args[1]);
         return Report(Has(args, "--json"), new { result.Succeeded, result.Messages }, string.Join(Environment.NewLine, result.Messages), result.Succeeded ? 0 : 3);
@@ -129,6 +131,30 @@ internal sealed class CliApp
             }
         }
 
+        if (status.HasExtraPackages)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Extra packages not in stack (informational):");
+            foreach (var package in status.ExtraPackages)
+            {
+                Console.WriteLine($"  {package.Id} {package.Version}");
+            }
+        }
+
+        Console.WriteLine();
+        if (status.HasDrift)
+        {
+            Console.WriteLine(status.HasExtraPackages
+                ? $"Drift detected. {status.ExtraPackages.Count} extra packages found (not flagged)."
+                : "Drift detected. No extra packages to report.");
+        }
+        else
+        {
+            Console.WriteLine(status.HasExtraPackages
+                ? $"No drift detected. {status.ExtraPackages.Count} extra packages found (not flagged)."
+                : "No drift detected. No extra packages to report.");
+        }
+
         return status.HasDrift ? 1 : 0;
     }
 
@@ -136,12 +162,13 @@ internal sealed class CliApp
     {
         if (args.Length < 2)
         {
-            return UsageError("Usage: dotkiln update <stack> [project.csproj] [--group name] [--dry-run] [--json]");
+            return UsageError("Usage: dotkiln update <stack> [project.csproj] [--group name] [--dry-run] [--force] [--json]");
         }
 
         var stack = await LoadAndValidateAsync(args[1]);
         var projectPath = Positional(args, 2) ?? Environment.CurrentDirectory;
         var processRunner = new ProcessRunner();
+        await EnsureCleanIfMutatingAsync(projectPath, Has(args, "--dry-run"), Has(args, "--force"), processRunner);
         var workflow = new UpdateWorkflow(
             inspector,
             new TempCopyIsolator(),
@@ -282,6 +309,16 @@ internal sealed class CliApp
         return new ApplyEngine(inspector, new NuGetVersionResolver(), processRunner ?? new ProcessRunner());
     }
 
+    private static async Task EnsureCleanIfMutatingAsync(string projectPath, bool dryRun, bool force, IProcessRunner? processRunner = null)
+    {
+        if (dryRun)
+        {
+            return;
+        }
+
+        await new GitWorkingTreeGuard(processRunner ?? new ProcessRunner()).EnsureCleanAsync(projectPath, force);
+    }
+
     private static string? Option(string[] args, string name)
     {
         var index = Array.IndexOf(args, name);
@@ -359,6 +396,6 @@ internal sealed class CliApp
         Console.WriteLine("  registry search <term>");
         Console.WriteLine("  registry publish <stack-file>");
         Console.WriteLine();
-        Console.WriteLine("Global flags: --dry-run, --json");
+        Console.WriteLine("Global flags: --dry-run, --force, --json");
     }
 }

@@ -11,7 +11,6 @@ Dotkiln currently reports drift when:
 
 Dotkiln currently does not report drift when:
 
-- a project contains extra packages that are not listed in the stack
 - the project target framework differs from the stack `targetFramework`
 - a package would belong to a different group, because group membership exists only in the stack file, not in `.csproj`
 
@@ -27,7 +26,11 @@ Example:
 Stack: console-tool-standard
   hosting      drift detected
     missing      Microsoft.Extensions.Hosting (missing) -> 8.0.*
+
+Drift detected. No extra packages to report.
 ```
+
+Meaning: the project does not satisfy the stack because `Microsoft.Extensions.Hosting` is required by the stack and is not installed. Run `apply --dry-run` to preview the package add, then run `apply` when ready.
 
 ## Version Drift
 
@@ -39,13 +42,47 @@ Example:
 Stack: aspnet-webapi-standard
   logging      drift detected
     out-of-range Serilog.AspNetCore 7.0.0 -> 8.0.*
+
+Drift detected. No extra packages to report.
 ```
+
+Meaning: the package exists, but the installed version does not match the stack expression. In this case, `7.0.0` does not satisfy `8.0.*`.
 
 ## Extra Packages
 
-Extra project packages are currently allowed and ignored by drift detection. Dotkiln does not remove extra packages during `apply` or `update`.
+Extra project packages are currently allowed and reported separately as informational output. They are not counted as drift. Dotkiln does not remove extra packages during `apply` or `update`.
 
 This is intentional for the current implementation: a stack defines a required baseline, not an exclusive allow-list.
+
+Example:
+
+```text
+Extra packages not in stack (informational):
+  AutoMapper 13.0.1
+  Polly 8.2.0
+
+No drift detected. 2 extra packages found (not flagged).
+```
+
+Meaning: the project satisfies the stack, and it also has two additional direct packages. Dotkiln reports them for visibility but exits with code `0`.
+
+## Ignored Extra Packages
+
+If a `.dotkilnignore` file exists next to the `.csproj`, package IDs listed there are suppressed from the extra-package report.
+
+```text
+# .dotkilnignore
+AutoMapper
+Polly
+```
+
+With that file in place, the same project reports:
+
+```text
+No drift detected. No extra packages to report.
+```
+
+Meaning: the project still has those packages, but Dotkiln suppresses them from the extra-package report for this project.
 
 ## Remediation
 

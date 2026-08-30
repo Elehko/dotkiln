@@ -26,6 +26,8 @@ Dotkiln can:
 - validate stack files before they are used
 - apply a stack to a new or existing `.NET` project
 - show drift between a project and a stack
+- report extra packages separately as informational output
+- suppress project-specific extra packages with `.dotkilnignore`
 - group related packages during update planning
 - run updates in isolation so failed updates do not touch the real project
 - search and publish stack files through a local/registry-style workflow
@@ -90,6 +92,72 @@ Run grouped update planning in dry-run mode:
 dotnet run --project src/Elehko.Dotkiln.Cli -- update stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj --group ef-core --dry-run
 ```
 
+## Example Workflow
+
+Start with a normal project that has one package from the stack and one project-specific package:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+  <PackageReference Include="AutoMapper" Version="13.0.1" />
+</ItemGroup>
+```
+
+Run `status`:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj
+```
+
+Dotkiln separates real stack drift from informational extras:
+
+```text
+Stack: aspnet-webapi-standard
+  api-docs     drift detected
+    missing      Swashbuckle.AspNetCore (missing) -> 6.*
+  ef-core      drift detected
+    missing      Microsoft.EntityFrameworkCore.SqlServer (missing) -> 8.0.*
+    missing      Microsoft.EntityFrameworkCore.Tools (missing) -> 8.0.*
+  logging      drift detected
+    missing      Serilog.Sinks.Console (missing) -> 6.*
+  validation   drift detected
+    missing      FluentValidation.AspNetCore (missing) -> 11.*
+
+Extra packages not in stack (informational):
+  AutoMapper 13.0.1
+
+Drift detected. 1 extra packages found (not flagged).
+```
+
+The missing stack packages are drift. `AutoMapper` is visible, but it is not treated as a failure because it is outside the stack's promise.
+
+Preview the fix:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- apply stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj --dry-run
+```
+
+Example preview:
+
+```text
+Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Serilog.Sinks.Console --version 6.*
+Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package FluentValidation.AspNetCore --version 11.*
+Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.*
+Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Microsoft.EntityFrameworkCore.Tools --version 8.0.*
+Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Swashbuckle.AspNetCore --version 6.*
+```
+
+Run without `--dry-run` when ready. Dotkiln uses `dotnet add package`, so the project file is modified by the .NET SDK rather than by custom XML editing.
+
+To hide project-specific extra packages from the informational report, add a `.dotkilnignore` file next to the project:
+
+```text
+# .dotkilnignore
+AutoMapper
+```
+
+After that, `AutoMapper` will no longer appear in the extra-package section.
+
 ## Installation
 
 Dotkiln is currently run from source:
@@ -128,6 +196,8 @@ Every mutating command supports:
 --dry-run
 ```
 
+Mutating `apply` and `update` commands require a clean git working tree by default. Use `--force` to override this guard.
+
 Every command supports:
 
 ```powershell
@@ -148,6 +218,19 @@ When running `update`, Dotkiln:
 6. reports success or writes a failure log
 
 If verification fails, the real project branch is not modified by the update workflow.
+
+For mutating commands, Dotkiln also checks git first. If the working tree has uncommitted changes, `apply` and `update` stop before making changes:
+
+```text
+The git working tree has uncommitted changes.
+Dotkiln relies on git for rollback safety and will not modify files
+while uncommitted changes are present.
+
+Commit or stash your changes, or re-run with --force to proceed anyway
+(not recommended).
+```
+
+This keeps rollback simple: commit or stash first, run Dotkiln, inspect `git diff`, and use normal git commands if you want to undo the result.
 
 ## Version Resolution
 
