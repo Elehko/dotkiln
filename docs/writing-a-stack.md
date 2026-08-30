@@ -22,3 +22,5 @@ Supported version expressions:
 - Exact versions: `8.0.8`
 - Wildcards: `8.0.*`, `6.*`
 - Basic NuGet-style ranges: `[8.0.0,9.0.0)`
+
+For the complete schema and validation rules, see [Stack schema](stack-schema.md). For version matching details, see [Versioning rules](versioning-rules.md).

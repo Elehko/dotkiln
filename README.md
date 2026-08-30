@@ -173,6 +173,23 @@ Prerelease versions are excluded by default for wildcard and range expressions. 
 | `samples` | Sample projects used for local testing and demos. |
 | `docs` | Guides and architecture decision records. |
 
+## Documentation
+
+- [Getting started](docs/getting-started.md)
+- [Stack schema](docs/stack-schema.md)
+- [Writing a stack](docs/writing-a-stack.md)
+- [Versioning rules](docs/versioning-rules.md)
+- [Drift detection](docs/drift-detection.md)
+- [Apply behavior](docs/apply-behavior.md)
+- [Update behavior](docs/update-behavior.md)
+- [Package groups](docs/package-groups.md)
+- [CLI reference](docs/cli-reference.md)
+- [Ignore and exclusion rules](docs/ignore-and-exclusion-rules.md)
+- [Safety and recovery](docs/safety-and-recovery.md)
+- [CI/CD examples](docs/ci-cd-examples.md)
+- [Migration guide](docs/migration-guide.md)
+- [FAQ](docs/faq.md)
+
 ## Project Status
 
 Dotkiln is early-stage software. The local stack workflow is implemented, including validation, apply, status, grouped update planning, isolation, and build/test verification.

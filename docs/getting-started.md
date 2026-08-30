@@ -1,5 +1,7 @@
 # Getting Started
 
+Dotkiln is currently run from source during development. The CLI project is `src/Elehko.Dotkiln.Cli`.
+
 Build the solution:
 
 ```powershell
@@ -35,3 +37,18 @@ Review grouped updates safely:
 ```powershell
 dotnet run --project src/Elehko.Dotkiln.Cli -- update stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj --group ef-core --dry-run
 ```
+
+## More Documentation
+
+- [Stack schema](stack-schema.md)
+- [Versioning rules](versioning-rules.md)
+- [Drift detection](drift-detection.md)
+- [Apply behavior](apply-behavior.md)
+- [Update behavior](update-behavior.md)
+- [Package groups](package-groups.md)
+- [CLI reference](cli-reference.md)
+- [Ignore and exclusion rules](ignore-and-exclusion-rules.md)
+- [Safety and recovery](safety-and-recovery.md)
+- [CI/CD examples](ci-cd-examples.md)
+- [Migration guide](migration-guide.md)
+- [FAQ](faq.md)
