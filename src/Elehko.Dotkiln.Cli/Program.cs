@@ -192,7 +192,8 @@ internal sealed class CliApp
             }
         }
 
-        return results.All(result => result.Succeeded) ? 0 : 1;
+        return results.All(result => 
+                           result.Succeeded) ? 0 : 1;
     }
 
     private async Task<int> ValidateAsync(string[] args)
