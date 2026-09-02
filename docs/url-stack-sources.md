@@ -5,15 +5,15 @@ Dotkiln can load stack definitions from local file paths or HTTP/HTTPS URLs.
 ## Local File
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.dotkiln.yaml
+dotkiln validate stacks/aspnet-webapi-standard.dotkiln.yaml
 ```
 
-Dotkiln reads the file from disk and parses it as a stack.
+Dotkiln reads the file from disk and parses it as a stack. Relative paths are resolved from the current directory.
 
 ## URL
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- validate https://example.com/stacks/aspnet-webapi-standard.dotkiln.yaml
+dotkiln validate https://example.com/stacks/aspnet-webapi-standard.dotkiln.yaml
 ```
 
 Dotkiln fetches the URL, reads the response body as YAML, and validates it.
@@ -21,7 +21,7 @@ Dotkiln fetches the URL, reads the response body as YAML, and validates it.
 The same source format works for commands that accept a stack:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- status https://example.com/stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj
+dotkiln status https://example.com/stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj
 ```
 
 ## Caching
@@ -49,7 +49,7 @@ For URL stack sources, snippet loading is skipped in the current implementation.
 Use local stack files for CI:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/company-webapi.dotkiln.yaml src/MyApi/MyApi.csproj
+dotkiln status stacks/company-webapi.dotkiln.yaml src/MyApi/MyApi.csproj
 ```
 
 Use URL stack files for evaluation or shared internal experiments where live fetch behavior is acceptable.

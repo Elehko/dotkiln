@@ -68,6 +68,12 @@ Install Dotkiln from NuGet:
 dotnet tool install --global Elehko.Dotkiln.Cli
 ```
 
+The examples below use stack files and sample projects from this repository. Run them from the repository root:
+
+```powershell
+cd C:\path\to\Dotkiln
+```
+
 Validate one of the built-in stacks:
 
 ```powershell
@@ -187,6 +193,8 @@ During local development, you can still run the CLI from source:
 ```powershell
 dotnet run --project src/Elehko.Dotkiln.Cli -- <command>
 ```
+
+Stack paths are resolved relative to your current directory. For example, `stacks/aspnet-webapi-standard.dotkiln.yaml` works when you run it from this repository root. In another project, pass the path to a stack file in that project or use an absolute path.
 
 ## Commands
 
