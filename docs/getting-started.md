@@ -1,6 +1,16 @@
 # Getting Started
 
-Dotkiln is currently run from source during development. The CLI project is `src/Elehko.Dotkiln.Cli`.
+Install Dotkiln from NuGet:
+
+```powershell
+dotnet tool install --global Elehko.Dotkiln.Cli
+```
+
+The examples below use stack files and sample projects from this repository. Run them from the repository root:
+
+```powershell
+cd C:\path\to\Dotkiln
+```
 
 Build the solution:
 
@@ -11,32 +21,40 @@ dotnet build
 Validate a stack file:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.dotkiln.yaml
+dotkiln validate stacks/aspnet-webapi-standard.dotkiln.yaml
 ```
 
 Inspect drift for a project:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj
+dotkiln status stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj
 ```
 
 Apply a stack to an existing project:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- apply stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj --dry-run
+dotkiln apply stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj --dry-run
 ```
 
 Create a new project from a stack:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- new stacks/aspnet-webapi-standard.dotkiln.yaml ClientPortal.Api
+dotkiln new stacks/aspnet-webapi-standard.dotkiln.yaml ClientPortal.Api
 ```
 
 Review grouped updates safely:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- update stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj --group ef-core --dry-run
+dotkiln update stacks/aspnet-webapi-standard.dotkiln.yaml path/to/project.csproj --group ef-core --dry-run
 ```
+
+During local development, you can still run the CLI from source:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- <command>
+```
+
+Stack paths are resolved relative to your current directory. If you run `dotkiln validate stacks/aspnet-webapi-standard.dotkiln.yaml` from `C:\Users\you`, Dotkiln looks for `C:\Users\you\stacks\aspnet-webapi-standard.dotkiln.yaml`. Use `cd` first or pass an absolute stack path.
 
 ## More Documentation
 
