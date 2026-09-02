@@ -62,34 +62,34 @@ The `group` field matters. Packages in the same group are treated as one update 
 
 ## Quick Start
 
-Clone the repository and build it:
+Install Dotkiln from NuGet:
 
 ```powershell
-dotnet build
+dotnet tool install --global Elehko.Dotkiln.Cli
 ```
 
 Validate one of the built-in stacks:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- validate stacks/aspnet-webapi-standard.dotkiln.yaml
+dotkiln validate stacks/aspnet-webapi-standard.dotkiln.yaml
 ```
 
 Check whether a project matches a stack:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj
+dotkiln status stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj
 ```
 
 Preview applying a stack:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- apply stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj --dry-run
+dotkiln apply stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj --dry-run
 ```
 
 Run grouped update planning in dry-run mode:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- update stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj --group ef-core --dry-run
+dotkiln update stacks/aspnet-webapi-standard.dotkiln.yaml samples/TestApp/TestApp.csproj --group ef-core --dry-run
 ```
 
 ## Example Workflow
@@ -106,7 +106,7 @@ Start with a normal project that has one package from the stack and one project-
 Run `status`:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- status stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj
+dotkiln status stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj
 ```
 
 Dotkiln separates real stack drift from informational extras:
@@ -134,7 +134,7 @@ The missing stack packages are drift. `AutoMapper` is visible, but it is not tre
 Preview the fix:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- apply stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj --dry-run
+dotkiln apply stacks/aspnet-webapi-standard.dotkiln.yaml MyApp.csproj --dry-run
 ```
 
 Example preview:
@@ -160,22 +160,32 @@ After that, `AutoMapper` will no longer appear in the extra-package section.
 
 ## Installation
 
-Dotkiln is currently run from source:
+Dotkiln is published as a .NET global tool on NuGet:
 
 ```powershell
-dotnet run --project src/Elehko.Dotkiln.Cli -- <command>
+dotnet tool install --global Elehko.Dotkiln.Cli
 ```
 
-The intended global tool installation shape is:
+Package page:
 
-```powershell
-dotnet tool install -g Elehko.Dotkiln.Cli
-```
+- <https://www.nuget.org/packages/Elehko.Dotkiln.Cli>
 
-Once installed as a tool, commands will use:
+After installation, run commands with:
 
 ```powershell
 dotkiln <command>
+```
+
+To update an existing global-tool install:
+
+```powershell
+dotnet tool update --global Elehko.Dotkiln.Cli
+```
+
+During local development, you can still run the CLI from source:
+
+```powershell
+dotnet run --project src/Elehko.Dotkiln.Cli -- <command>
 ```
 
 ## Commands
@@ -285,7 +295,6 @@ Still planned:
 
 - production registry authentication and storage
 - GitHub pull request creation for verified updates
-- signed NuGet tool publishing
 - broader integration and end-to-end test coverage
 - migration from custom CLI parsing to `System.CommandLine`
 
