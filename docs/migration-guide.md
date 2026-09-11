@@ -70,7 +70,7 @@ If your repository uses Central Package Management, evaluate package changes car
 
 ## Directory.Packages.props
 
-Drift detection reads central versions from `Directory.Packages.props`. Direct editing of `Directory.Packages.props` is not currently implemented.
+Drift detection reads central versions from `Directory.Packages.props`. `apply` adds or updates central `PackageVersion` entries there while keeping project-level `PackageReference` entries versionless.
 
 ## Multi-project Solutions
 

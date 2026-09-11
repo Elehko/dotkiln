@@ -10,7 +10,8 @@
 - compares direct `PackageReference` entries with the stack
 - adds missing stack packages
 - updates out-of-range package versions
-- uses `dotnet add package` instead of manually editing XML
+- uses `dotnet add package` for regular projects
+- updates the nearest `Directory.Packages.props` file for projects using Central Package Management
 - prints a starter snippet if the stack references one and the file exists locally
 
 ## What Apply Does Not Do
@@ -77,6 +78,30 @@ log  : Restored C:\repo\MyApp\MyApp.csproj.
 
 Meaning: Dotkiln delegated the package write to `dotnet add package`. The .NET SDK updated the project file and restored packages.
 
+## Central Package Management
+
+If a nearest `Directory.Packages.props` file exists, `apply` treats the project as using Central Package Management.
+
+For CPM projects, Dotkiln:
+
+- adds missing `<PackageReference Include="Package.Id" />` entries to the `.csproj`
+- adds or updates matching `<PackageVersion Include="Package.Id" Version="x.y.z" />` entries in `Directory.Packages.props`
+- keeps project-level package references versionless unless the project already uses a local `Version` or `VersionOverride`
+
+Example project change:
+
+```xml
+<PackageReference Include="Serilog.AspNetCore" />
+```
+
+Example central version change:
+
+```xml
+<PackageVersion Include="Serilog.AspNetCore" Version="8.0.3" />
+```
+
+Meaning: the project declares that it uses the package, while the central props file owns the version.
+
 ## Preview Mode
 
 ```powershell
@@ -90,6 +115,13 @@ Would run: dotnet add "C:\repo\MyApi\MyApi.csproj" package Serilog.AspNetCore --
 ```
 
 Meaning: Dotkiln found a package operation it would run, but it did not modify the project because `--dry-run` was used.
+
+For CPM projects, dry-run output describes the XML changes instead:
+
+```text
+Would add PackageReference 'Serilog.AspNetCore' to C:\repo\MyApi\MyApi.csproj.
+Would set central PackageVersion 'Serilog.AspNetCore' to 8.0.* in C:\repo\Directory.Packages.props.
+```
 
 ## Already Matching Project
 

@@ -89,7 +89,7 @@ public sealed class CsprojInspector
 
     private static IReadOnlyDictionary<string, string> LoadCentralPackageVersions(string projectPath)
     {
-        var centralPackagesPath = FindNearestCentralPackagesFile(projectPath);
+        var centralPackagesPath = FindNearestCentralPackagesFilePath(projectPath);
         if (centralPackagesPath is null)
         {
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -113,7 +113,17 @@ public sealed class CsprojInspector
         return versions;
     }
 
-    private static string? FindNearestCentralPackagesFile(string projectPath)
+    /// <summary>
+    /// Finds the nearest Directory.Packages.props file by walking up from the project directory.
+    /// </summary>
+    public string? FindNearestCentralPackagesFile(string projectPath)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(projectPath);
+
+        return FindNearestCentralPackagesFilePath(Path.GetFullPath(projectPath));
+    }
+
+    private static string? FindNearestCentralPackagesFilePath(string projectPath)
     {
         var projectDirectory = Path.GetDirectoryName(projectPath);
         if (projectDirectory is null)

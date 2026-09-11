@@ -158,6 +158,8 @@ Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Swashbuckle.AspNetCor
 
 Run without `--dry-run` when ready. Dotkiln uses `dotnet add package`, so the project file is modified by the .NET SDK rather than by custom XML editing.
 
+For projects using Central Package Management, Dotkiln keeps project references versionless and writes resolved versions to the nearest `Directory.Packages.props` file instead.
+
 To hide project-specific extra packages from the informational report, add a `.dotkilnignore` file next to the project:
 
 ```text
@@ -205,7 +207,7 @@ Stack paths are resolved relative to your current directory. For example, `stack
 | --- | --- |
 | `validate <stack>` | Parse and validate a stack file. |
 | `new <stack> <project-name>` | Create a new .NET project and apply a stack. |
-| `apply <stack> [project.csproj]` | Add or update direct package references from a stack. |
+| `apply <stack> [project.csproj]` | Add or update direct package references from a stack. Uses `Directory.Packages.props` when Central Package Management is present. |
 | `status <stack> [project.csproj]` | Show drift between the project and the stack. |
 | `update <stack> [project.csproj] [--group name]` | Apply grouped updates in an isolated workspace and verify them. |
 | `registry search <term>` | Search local/registry stack definitions. |
