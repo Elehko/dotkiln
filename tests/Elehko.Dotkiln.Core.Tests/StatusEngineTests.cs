@@ -61,6 +61,40 @@ public sealed class StatusEngineTests
         Assert.False(status.HasExtraPackages);
     }
 
+    [Fact]
+    public void GetStatus_resolves_central_package_versions()
+    {
+        using var workspace = new TemporaryWorkspace();
+        workspace.WriteFile("Directory.Packages.props", """
+            <Project>
+              <ItemGroup>
+                <PackageVersion Include="Serilog.AspNetCore" Version="8.0.3" />
+              </ItemGroup>
+            </Project>
+            """);
+        var project = workspace.WriteFile("Sample.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <ItemGroup>
+                <PackageReference Include="Serilog.AspNetCore" />
+              </ItemGroup>
+            </Project>
+            """);
+        var stack = new StackDefinition(
+            "sample",
+            "Sample",
+            "net8.0",
+            [new PackageEntry("Serilog.AspNetCore", "8.0.*", "logging")]);
+
+        var status = new StatusEngine(new CsprojInspector()).GetStatus(project, stack);
+
+        Assert.False(status.HasDrift);
+        Assert.Contains(
+            status.Groups.SelectMany(group => group.Packages),
+            package => package.Id == "Serilog.AspNetCore"
+                && package.InstalledVersion == "8.0.3"
+                && package.State == "up-to-date");
+    }
+
     private sealed class TemporaryWorkspace : IDisposable
     {
         private readonly string root = Path.Combine(Path.GetTempPath(), $"dotkiln-tests-{Guid.NewGuid():N}");

@@ -83,4 +83,6 @@ No. Wildcard and range expressions resolve stable versions by default. A stack m
 
 ## Does Dotkiln support Central Package Management?
 
-Not yet. Dotkiln currently focuses on direct `PackageReference` entries in `.csproj` files.
+Partially. `status` resolves versions for direct `PackageReference` entries from the nearest `Directory.Packages.props` file when the project uses Central Package Management.
+
+Dotkiln still operates on one project at a time and does not directly edit `Directory.Packages.props`.
