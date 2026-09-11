@@ -12,5 +12,10 @@
     <RepositoryType>git</RepositoryType>
     <Authors>Dotkiln contributors</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>A package stack manager and safe update engine for .NET. Dotkiln helps developers define, reuse, apply, check, and safely update curated NuGet package stacks.</Description>
+    <PackageIcon>Dotkiln Icon.png</PackageIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)docs\assets\Dotkiln Icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
     <ToolCommandName>dotkiln</ToolCommandName>
     <RootNamespace>Elehko.Dotkiln.Cli</RootNamespace>
     <PackageId>Elehko.Dotkiln.Cli</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elehko.Dotkiln.Core\Elehko.Dotkiln.Core.csproj" />
