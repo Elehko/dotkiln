@@ -2,6 +2,8 @@
 
 Drift is the difference between a project's direct `PackageReference` entries and the package requirements declared by a Dotkiln stack.
 
+When a project uses Central Package Management, Dotkiln resolves package versions from the nearest `Directory.Packages.props` file.
+
 ## What Counts As Drift
 
 Dotkiln currently reports drift when:
@@ -47,6 +49,8 @@ Drift detected. No extra packages to report.
 ```
 
 Meaning: the package exists, but the installed version does not match the stack expression. In this case, `7.0.0` does not satisfy `8.0.*`.
+
+For Central Package Management projects, the installed version shown by `status` comes from `Directory.Packages.props` when the project-level `PackageReference` does not declare a local version.
 
 ## Extra Packages
 

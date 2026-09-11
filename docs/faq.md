@@ -23,7 +23,7 @@ missing      Swashbuckle.AspNetCore (missing) -> 6.*
 
 ## Does Dotkiln automatically modify project files?
 
-`apply` modifies `.csproj` files by running `dotnet add package`. `status` and `validate` do not modify project files. `update` modifies an isolated workspace, not the real project.
+`apply` modifies `.csproj` files by running `dotnet add package` for regular projects. For Central Package Management projects, `apply` updates the `.csproj` and nearest `Directory.Packages.props` file directly. `status` and `validate` do not modify project files. `update` modifies an isolated workspace, not the real project.
 
 Use `apply --dry-run` to preview changes before modifying a project.
 
@@ -83,4 +83,6 @@ No. Wildcard and range expressions resolve stable versions by default. A stack m
 
 ## Does Dotkiln support Central Package Management?
 
-Not yet. Dotkiln currently focuses on direct `PackageReference` entries in `.csproj` files.
+Yes. `status` resolves versions for direct `PackageReference` entries from the nearest `Directory.Packages.props` file when the project uses Central Package Management.
+
+`apply` adds missing project references to the `.csproj` and adds or updates central versions in `Directory.Packages.props`. Dotkiln still operates on one project at a time.

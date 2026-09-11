@@ -64,13 +64,13 @@ Run `status` against one project first. Add more packages only after the initial
 
 ## Central Package Management
 
-Dotkiln currently inspects direct `PackageReference` entries in `.csproj` files. Full `Directory.Packages.props` support is not implemented yet.
+Dotkiln resolves versions for direct `PackageReference` entries from the nearest `Directory.Packages.props` file when the project uses Central Package Management.
 
-If your repository uses Central Package Management, evaluate Dotkiln carefully and prefer `--dry-run` until native support exists.
+If your repository uses Central Package Management, evaluate package changes carefully and prefer `apply --dry-run` before modifying a project.
 
 ## Directory.Packages.props
 
-Direct editing or drift detection against `Directory.Packages.props` is not currently implemented.
+Drift detection reads central versions from `Directory.Packages.props`. `apply` adds or updates central `PackageVersion` entries there while keeping project-level `PackageReference` entries versionless.
 
 ## Multi-project Solutions
 

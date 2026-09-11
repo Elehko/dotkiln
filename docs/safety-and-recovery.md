@@ -33,11 +33,12 @@ Dry-run output is intentionally command-like. It should tell you what Dotkiln in
 
 ## Undoing Apply
 
-`apply` changes the target `.csproj` through `dotnet add package`. To undo, use normal source control:
+`apply` changes the target `.csproj` through `dotnet add package` for regular projects. For Central Package Management projects, it can change both the target `.csproj` and the nearest `Directory.Packages.props`. To undo, use normal source control:
 
 ```powershell
 git diff
 git restore path/to/project.csproj
+git restore path/to/Directory.Packages.props
 ```
 
 If restore generated `obj` files, those are build artifacts and should usually be ignored by Git.
@@ -56,6 +57,8 @@ Example diff:
 ```
 
 Meaning: these are normal project-file changes. Keep them by committing, or discard them with git if they are not wanted.
+
+For CPM projects, also review `Directory.Packages.props` for central `PackageVersion` additions or updates.
 
 ## Clean Working Tree Requirement
 

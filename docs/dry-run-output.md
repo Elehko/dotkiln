@@ -29,6 +29,13 @@ Would run: dotnet add "C:\repo\MyApp\MyApp.csproj" package Microsoft.EntityFrame
 
 Meaning: Dotkiln has detected missing or out-of-range packages and is showing the `dotnet add package` commands it would run.
 
+For projects using Central Package Management, `apply --dry-run` previews the XML changes Dotkiln would make:
+
+```text
+Would add PackageReference 'Serilog.AspNetCore' to C:\repo\MyApp\MyApp.csproj.
+Would set central PackageVersion 'Serilog.AspNetCore' to 8.0.* in C:\repo\Directory.Packages.props.
+```
+
 If the project already matches the stack:
 
 ```text
