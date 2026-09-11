@@ -1,3 +1,6 @@
+<img width="980" height="394" alt="Dotkiln Logo" src="https://github.com/user-attachments/assets/9ce83d08-2003-4bab-acc5-083162ab8d56" />
+
+
 # Dotkiln
 
 A package stack manager and safe update engine for .NET.
